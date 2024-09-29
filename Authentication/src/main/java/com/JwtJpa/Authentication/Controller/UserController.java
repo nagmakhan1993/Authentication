@@ -1,12 +1,19 @@
 package com.JwtJpa.Authentication.Controller;
 
-import com.JwtJpa.Authentication.Entity.UserEntity;
-import com.JwtJpa.Authentication.Model.UserModel;
-import com.JwtJpa.Authentication.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.JwtJpa.Authentication.Entity.UserEntity;
+import com.JwtJpa.Authentication.Service.UserService;
 
 @RestController
 @RequestMapping("/user")

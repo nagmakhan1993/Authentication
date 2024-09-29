@@ -1,7 +1,5 @@
 package com.JwtJpa.Authentication.Config;
 
-import com.JwtJpa.Authentication.Security.JwtAuthenticationEntryPoint;
-import com.JwtJpa.Authentication.Security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.JwtJpa.Authentication.Security.JwtAuthenticationEntryPoint;
+import com.JwtJpa.Authentication.Security.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {

@@ -1,10 +1,5 @@
 package com.JwtJpa.Authentication.Controller;
 
-import com.JwtJpa.Authentication.Model.JwtRequest;
-import com.JwtJpa.Authentication.Model.JwtResponse;
-import com.JwtJpa.Authentication.Model.UserModel;
-import com.JwtJpa.Authentication.Security.JwtHelper;
-import com.JwtJpa.Authentication.Service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,60 +10,66 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.JwtJpa.Authentication.Model.JwtRequest;
+import com.JwtJpa.Authentication.Model.JwtResponse;
+import com.JwtJpa.Authentication.Model.UserModel;
+import com.JwtJpa.Authentication.Security.JwtHelper;
+import com.JwtJpa.Authentication.Service.UserService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    @Autowired
-    private UserDetailsService userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 
-    @Autowired
-    private AuthenticationManager manager;
+	@Autowired
+	private AuthenticationManager manager;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JwtHelper helper;
+	@Autowired
+	private UserService userService;
 
-    private Logger logger = LoggerFactory.getLogger(AuthController.class);
+	@Autowired
+	private JwtHelper helper;
 
+	private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
+	@PostMapping("/login")
+	public ResponseEntity<JwtResponse> generateToken(@RequestBody JwtRequest request) {
 
-        this.doAuthenticate(request.getEmail(), request.getPassword());
+		this.doAuthenticate(request.getEmail(), request.getPassword());
 
+		UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+		String token = this.helper.generateToken(userDetails);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        String token = this.helper.generateToken(userDetails);
+		JwtResponse response = new JwtResponse(token, userDetails.getUsername());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-        JwtResponse response = JwtResponse.builder()
-                .jwtToken(token)
-                .username(userDetails.getUsername()).build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	private void doAuthenticate(String email, String password) {
 
-    private void doAuthenticate(String email, String password) {
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
+		try {
+			manager.authenticate(authentication);
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            manager.authenticate(authentication);
+		} catch (BadCredentialsException e) {
+			throw new BadCredentialsException(" Invalid Username or Password  !!");
+		}
 
+	}
 
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
-        }
+	@PostMapping("/create-user")
+	public UserModel createUser(@RequestBody UserModel userModel) {
+		return this.userService.createUser(userModel);
+	}
 
-    }
-
-    @PostMapping("/create-user")
-    public UserModel createUser(@RequestBody UserModel userModel) {
-        return this.userService.createUser(userModel);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
-    }
+	@ExceptionHandler(BadCredentialsException.class)
+	public String exceptionHandler() {
+		return "Credentials Invalid !!";
+	}
 }

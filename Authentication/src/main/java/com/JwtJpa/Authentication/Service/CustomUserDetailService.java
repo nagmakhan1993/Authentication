@@ -1,12 +1,13 @@
 package com.JwtJpa.Authentication.Service;
 
-import com.JwtJpa.Authentication.Model.UserModel;
-import com.JwtJpa.Authentication.Repository.UserModelRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.JwtJpa.Authentication.Model.UserModel;
+import com.JwtJpa.Authentication.Repository.UserModelRepositry;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {

@@ -1,7 +1,9 @@
 package com.JwtJpa.Authentication.Service;
 
-import com.JwtJpa.Authentication.Model.UserModel;
-import com.JwtJpa.Authentication.Repository.UserModelRepositry;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,9 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import com.JwtJpa.Authentication.Model.UserModel;
+import com.JwtJpa.Authentication.Repository.UserModelRepositry;
 
 @Service
 public class UserModelServiceImpl implements UserModelRepositry {

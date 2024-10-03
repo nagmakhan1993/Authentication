@@ -3,6 +3,7 @@ package com.JwtJpa.Authentication.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.JwtJpa.Authentication.Entity.UserEntity;
@@ -12,16 +13,22 @@ import com.JwtJpa.Authentication.Repository.UserRepository;
 
 @Service
 public class UserService {
+
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
 	private UserModelRepositry userModelRepositry;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	public List<UserModel> getUserModelList() {
 		return this.userModelRepositry.findAll();
 	}
 
 	public UserEntity addUser(UserEntity user) {
+
 		return this.userRepository.save(user);
 	}
 
@@ -74,8 +81,13 @@ public class UserService {
 
 	public UserModel createUser(UserModel userModel) {
 
-		UserModel model = new UserModel(userModel.getUserId(), userModel.getUsername(), userModel.getPassword());
-		UserModel save = this.userModelRepositry.save(userModel);
+		UserModel model = new UserModel();
+		String password = userModel.getPassword();
+		System.out.println(password);
+		model.setPassword(passwordEncoder.encode(password));
+
+		model.setUserName(userModel.getUserName());
+		this.userModelRepositry.save(model);
 		return model;
 	}
 }

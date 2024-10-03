@@ -25,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "UserLogin")
+@Table(name = "UserModel")
 @DynamicUpdate
 @Data
 
@@ -38,6 +38,9 @@ public class UserModel implements UserDetails {
 	private String userName;
 	@Column(name = "password")
 	private String password;
+
+	public UserModel() {
+	}
 
 	public UserModel(Integer userId, String username, String password) {
 		this.userId = userId;
@@ -59,7 +62,7 @@ public class UserModel implements UserDetails {
 	}
 
 	public String getUserName() {
-		return userName;
+		return this.userName;
 	}
 
 	public void setUserName(String userName) {
@@ -99,6 +102,6 @@ public class UserModel implements UserDetails {
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.password;
 	}
 }
